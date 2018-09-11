@@ -1,3 +1,5 @@
+//õpin ja vaatan https://www.tutorialspoint.com/nodejs/nodejs_repl_terminal.htm
+
 var http = require("http");
 
 http.createServer(function (request, response) {
