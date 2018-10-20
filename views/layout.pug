@@ -2,9 +2,32 @@ doctype html
 html
     head
         title Annemarii projekt
+        link(rel='stylesheet' href='/bower/bootstrap/dist/css/bootstrap.css')
     body
-        block content
+        nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
+            .container
+                a.navbar-brand(href='#') Node.js projekt
+                button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
+                    span.navbar-toggler-icon
+                #navbarsExampleDefault.collapse.navbar-collapse
+                    ul.navbar-nav.mr-auto
+                        li.nav-item
+                            a.nav-link(href='/')  Avaleht 
+                            span.sr-only (current)
+                        li.nav-item
+                          a.nav-link(href='/articles/add') Lisa artikkel
+
         br
-        hr
-        footer
-            p Annemarii &copy 2018
+        br
+        br     
+                    
+        .container
+            block content
+            br  
+            hr
+            footer
+                p Annemarii &copy 2018
+        script('/bower/jquery/dist/jquery.js')
+        script('/bower/bootstrap/dist/js/bootstrap.js')
+
+    
