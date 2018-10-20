@@ -20,6 +20,7 @@ http.createServer(function (request, response) {
 const express = require('express');
 const port = 3000;
 const path = require('path');
+const mongoose = require('mongoose');
 
 //Init app
 const app = express()
@@ -29,13 +30,46 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
  //Home route
-  app.get('/', (req, res) => res.render('index',{
+  app.get('/', function(req, res){
+    let articles =[
+    {   
+        id:1,
+        title: 'Esimene artikkel',
+        author: 'Andres Kuku',
+        body:'See on esimene artikkel'
 
-    title: 'Artiklid'
-  }))
+    },
+    {   
+        id:2,
+        title: 'Teine artikkel',
+        author: 'Andreas Kukuu',
+        body:'See on teineartikkel'
+
+    },
+    {   
+        id:1,
+        title: 'Kolmas artikkel',
+        author: 'Andris Kukukuu',
+        body:'See on kolmas artikkel'
+
+    }  
+  ];
+  res.render('index',{
+    title: 'Artiklid',
+    articles: articles
+  })
+  
+})
  
 //add route
+app.get('/articles/add', function(req, res){
 
+    res.render('add_article',{
+        title: 'Lisa artikkel'
+      })
+
+
+})
 
 
 
