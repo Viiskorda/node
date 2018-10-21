@@ -5,6 +5,10 @@ const port = 3000;
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+
 
 mongoose.connect('mongodb://localhost/node');
 let db=mongoose.connection;
@@ -41,6 +45,40 @@ app.use(bodyParser.json())
 
 //Set public folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+//Express Session Middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+  }));
+
+  //Express Messages Middleware
+
+  app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(expressValidator({
+    errorFormatter: function(param, msg, value) {
+        var namespace = param.split('.')
+        , root    = namespace.shift()
+        , formParam = root;
+  
+      while(namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+      }
+      return {
+        param : formParam,
+        msg   : msg,
+        value : value
+      };
+    }
+  }));
 
 
 
@@ -86,21 +124,40 @@ app.get('/articles/add', function(req, res){
 
 //add sutmin POST route
 
-
 app.post('/articles/add', function(req, res){
+    req.checkBody('title', 'Pealkiri on nõutud').notEmpty();
+    req.checkBody('author', 'Autor on nõutud').notEmpty();
+    req.checkBody('body', 'Sisu on nõutud').notEmpty();
+
+let errors=req.validationErrors();
+    if(errors){
+        res.render('add_article', {
+            title: 'Lisa artikkel',
+            errors:errors
+
+})    
+
+}else{
+
 let article= new Article();
 article.title=req.body.title;
 article.author=req.body.author;
 article.body=req.body.body;
+
+
 article.save(function(err){
 if(err){
     console.log(err);
 }
 else{
+    req.flash('success', "Artikkel lisatud");
 res.redirect('/');
 
 }
 });
+};
+
+
 });
 
 
@@ -130,6 +187,7 @@ app.post('/articles/edit/:id', function(req, res){
         console.log(err);
     }
     else{
+    req.flash('sucess', 'Artikkel uuendatud')
     res.redirect('/');
     
     }
@@ -142,6 +200,7 @@ app.post('/articles/edit/:id', function(req, res){
 //Delete article
 app.delete('/article/:id', function(req,res){
 let query = {_id:req.params.id}
+
 Article.remove(query, function(err){
     if(err){
 console.log(err);
