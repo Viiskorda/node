@@ -19,7 +19,7 @@ router.get('/add', function(req, res){
 
 
 
-//add sutmin POST route
+//add submin POST route
 
 router.post('/add', function(req, res){
     req.checkBody('title', 'Pealkiri on nõutud').notEmpty();
@@ -59,7 +59,7 @@ res.redirect('/');
 
 
 //Load edit form
-router.get('/article/edit/:id', function(req, res){
+router.get('/edit/:id', function(req, res){
     Article.findById(req.params.id, function(err, article){
         res.render('edit_article', {
             title: 'Artikli muutmine',
@@ -84,7 +84,7 @@ router.post('/edit/:id', function(req, res){
         console.log(err);
     }
     else{
-    req.flash('sucess', 'Artikkel uuendatud')
+    req.flash('success', 'Artikkel uuendatud')
     res.redirect('/');
     
     }
